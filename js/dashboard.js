@@ -1,6 +1,7 @@
-VelType V1 Dashboard JavaScript
-
-/* VELTYPE — DASHBOARD V1 */
+/* =========================================================
+   VELTYPE — DASHBOARD
+   Connected to Typing Test + Learn localStorage
+   ========================================================= */
 
 (() => {
     "use strict";
@@ -11,19 +12,22 @@ VelType V1 Dashboard JavaScript
 
     const STORAGE_KEYS = {
         tests: "veltypeTests",
-        lessons: "veltypeLessons",
+        lessons: "veltypeLessonProgress",
         progress: "veltypeProgress",
         exercises: "veltypeExercises"
     };
 
-    const $ = selector => document.querySelector(selector);
+    const TOTAL_LESSONS = 24;
+
+    const $ = selector =>
+        document.querySelector(selector);
 
 
     /* =========================================================
-       LOCAL STORAGE HELPERS
+       STORAGE HELPERS
        ========================================================= */
 
-    function getData(key, fallback = []) {
+    function getData(key, fallback = null) {
         try {
             const value = localStorage.getItem(key);
 
@@ -34,26 +38,70 @@ VelType V1 Dashboard JavaScript
             const data = JSON.parse(value);
 
             return data ?? fallback;
-        } catch {
+
+        } catch (error) {
+            console.error(
+                `VelType could not read ${key}:`,
+                error
+            );
+
             return fallback;
         }
     }
 
+
+    /* =========================================================
+       TEST DATA
+       ========================================================= */
+
     function getTests() {
-        const data = getData(STORAGE_KEYS.tests, []);
+        const tests = getData(
+            STORAGE_KEYS.tests,
+            []
+        );
 
-        return Array.isArray(data) ? data : [];
-    }
-
-    function getLessons() {
-        const data = getData(STORAGE_KEYS.lessons, []);
-
-        return Array.isArray(data) ? data : [];
+        return Array.isArray(tests)
+            ? tests
+            : [];
     }
 
 
     /* =========================================================
-       BASIC UI HELPERS
+       LESSON DATA
+       =========================================================
+
+       learn.js uses:
+
+       veltypeLessonProgress
+
+       Example:
+
+       {
+           "1": {
+               completed: true
+           },
+           "2": {
+               completed: false
+           }
+       }
+    */
+
+    function getLessonProgress() {
+        const progress = getData(
+            STORAGE_KEYS.lessons,
+            {}
+        );
+
+        return progress &&
+            typeof progress === "object" &&
+            !Array.isArray(progress)
+            ? progress
+            : {};
+    }
+
+
+    /* =========================================================
+       BASIC UI
        ========================================================= */
 
     function setText(selector, value) {
@@ -64,122 +112,25 @@ VelType V1 Dashboard JavaScript
         }
     }
 
+
     function setWidth(selector, percent) {
         const element = $(selector);
 
-        if (!element) return;
+        if (!element) {
+            return;
+        }
 
-        const value = Math.max(0, Math.min(100, Number(percent) || 0));
+        const value = Math.max(
+            0,
+            Math.min(
+                100,
+                Number(percent) || 0
+            )
+        );
 
         requestAnimationFrame(() => {
             element.style.width = `${value}%`;
         });
-    }
-
-    function escapeHTML(value) {
-        return String(value)
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll('"', "&quot;")
-            .replaceAll("'", "&#039;");
-    }
-
-
-    /* =========================================================
-       TEST TIMESTAMP
-       ========================================================= */
-
-    function getTimestamp(test) {
-        if (!test) return 0;
-
-        const value =
-            test.timestamp ||
-            test.date ||
-            test.createdAt;
-
-        if (!value) return 0;
-
-        if (typeof value === "number") {
-            return value;
-        }
-
-        const timestamp = new Date(value).getTime();
-
-        return Number.isNaN(timestamp)
-            ? Number(value) || 0
-            : timestamp;
-    }
-
-
-    /* =========================================================
-       DATE FORMAT
-       ========================================================= */
-
-    function formatDate(value) {
-        if (!value) {
-            return "Recently";
-        }
-
-        const date = new Date(value);
-
-        if (Number.isNaN(date.getTime())) {
-            return "Recently";
-        }
-
-        return new Intl.DateTimeFormat("en", {
-            day: "numeric",
-            month: "short"
-        }).format(date);
-    }
-
-
-    /* =========================================================
-       TEST STATISTICS
-       ========================================================= */
-
-    function getTestStats() {
-        const data = getTests();
-
-        if (!data.length) {
-            return {
-                count: 0,
-                bestWpm: 0,
-                bestAccuracy: 0,
-                averageWpm: 0,
-                averageAccuracy: 0
-            };
-        }
-
-        const wpm = data.map(test =>
-            Number(test.wpm) || 0
-        );
-
-        const accuracy = data.map(test =>
-            Number(test.accuracy) || 0
-        );
-
-        return {
-            count: data.length,
-
-            bestWpm: Math.max(...wpm),
-
-            bestAccuracy: Math.max(...accuracy),
-
-            averageWpm: Math.round(
-                wpm.reduce(
-                    (sum, value) => sum + value,
-                    0
-                ) / wpm.length
-            ),
-
-            averageAccuracy: Math.round(
-                accuracy.reduce(
-                    (sum, value) => sum + value,
-                    0
-                ) / accuracy.length
-            )
-        };
     }
 
 
@@ -187,33 +138,52 @@ VelType V1 Dashboard JavaScript
        NUMBER ANIMATION
        ========================================================= */
 
-    function animateNumber(selector, target, suffix = "") {
+    function animateNumber(
+        selector,
+        target,
+        suffix = ""
+    ) {
         const element = $(selector);
 
-        if (!element) return;
+        if (!element) {
+            return;
+        }
 
         const end = Number(target) || 0;
-        const duration = 600;
-        const startTime = performance.now();
+
+        const duration = 500;
+
+        const startTime =
+            performance.now();
 
         function update(currentTime) {
-            const progress = Math.min(
-                (currentTime - startTime) / duration,
-                1
-            );
+
+            const progress =
+                Math.min(
+                    (currentTime - startTime) /
+                    duration,
+                    1
+                );
 
             const eased =
-                1 - Math.pow(1 - progress, 3);
+                1 -
+                Math.pow(
+                    1 - progress,
+                    3
+                );
 
-            const value = Math.round(
-                end * eased
-            );
+            const value =
+                Math.round(
+                    end * eased
+                );
 
             element.textContent =
                 `${value}${suffix}`;
 
             if (progress < 1) {
-                requestAnimationFrame(update);
+                requestAnimationFrame(
+                    update
+                );
             }
         }
 
@@ -222,65 +192,138 @@ VelType V1 Dashboard JavaScript
 
 
     /* =========================================================
-       LESSON PROGRESS
-       =========================================================
+       TEST STATISTICS
+       ========================================================= */
 
-       Supports different lesson.js storage formats.
+    function getTestStats() {
 
-       Examples:
+        const tests = getTests();
 
-       {
-           id: 1,
-           progress: 50
-       }
-
-       {
-           lesson: 1,
-           progress: 50
-       }
-
-       {
-           id: "lesson-01",
-           progress: 0.5
-       }
-
-       {
-           id: 1,
-           completed: true
-       }
-    */
-
-    function getLessonNumber(lesson) {
-        if (!lesson) return null;
-
-        const value =
-            lesson.id ??
-            lesson.lessonId ??
-            lesson.lesson ??
-            lesson.number ??
-            lesson.lessonNumber;
-
-        if (value === undefined || value === null) {
-            return null;
+        if (!tests.length) {
+            return {
+                count: 0,
+                bestWpm: 0,
+                averageWpm: 0,
+                bestAccuracy: 0,
+                averageAccuracy: 0
+            };
         }
 
-        const match =
-            String(value).match(/\d+/);
+        const wpmValues =
+            tests.map(test =>
+                Number(test.wpm) || 0
+            );
 
-        if (!match) {
-            return null;
-        }
+        const accuracyValues =
+            tests.map(test =>
+                Number(test.accuracy) || 0
+            );
 
-        return Number(match[0]);
+        const averageWpm =
+            wpmValues.length
+                ? Math.round(
+                    wpmValues.reduce(
+                        (sum, value) =>
+                            sum + value,
+                        0
+                    ) /
+                    wpmValues.length
+                )
+                : 0;
+
+        const averageAccuracy =
+            accuracyValues.length
+                ? Math.round(
+                    accuracyValues.reduce(
+                        (sum, value) =>
+                            sum + value,
+                        0
+                    ) /
+                    accuracyValues.length
+                )
+                : 0;
+
+        return {
+            count: tests.length,
+
+            bestWpm:
+                Math.max(...wpmValues),
+
+            averageWpm,
+
+            bestAccuracy:
+                Math.max(...accuracyValues),
+
+            averageAccuracy
+        };
     }
 
 
-    function getLessonProgress(lesson) {
+    /* =========================================================
+       LESSON HELPERS
+       ========================================================= */
+
+    function isLessonCompleted(
+        lessonNumber,
+        progress
+    ) {
+        const lesson =
+            progress[String(lessonNumber)];
+
+        return Boolean(
+            lesson &&
+            lesson.completed === true
+        );
+    }
+
+
+    function getCompletedLessons() {
+
+        const progress =
+            getLessonProgress();
+
+        let completed = 0;
+
+        for (
+            let i = 1;
+            i <= TOTAL_LESSONS;
+            i++
+        ) {
+            if (
+                isLessonCompleted(
+                    i,
+                    progress
+                )
+            ) {
+                completed++;
+            }
+        }
+
+        return completed;
+    }
+
+
+    /* =========================================================
+       LESSON PROGRESS
+       =========================================================
+
+       The current learn.js code mainly
+       stores completed: true/false.
+
+       This also supports progress values
+       if your lesson page later adds them.
+    */
+
+    function getLessonPercent(
+        lessonNumber,
+        progress
+    ) {
+        const lesson =
+            progress[String(lessonNumber)];
+
         if (!lesson) {
             return 0;
         }
-
-        /* Fully completed lesson */
 
         if (
             lesson.completed === true ||
@@ -289,37 +332,28 @@ VelType V1 Dashboard JavaScript
             return 100;
         }
 
-
-        /* Possible progress property names */
-
-        let progress =
+        let value =
             lesson.progress ??
             lesson.percent ??
             lesson.percentage ??
             lesson.completion ??
             0;
 
-
-        /* Convert strings such as "50%" */
-
-        if (typeof progress === "string") {
-            progress = progress.replace("%", "");
+        if (typeof value === "string") {
+            value =
+                value.replace("%", "");
         }
 
-        progress = Number(progress);
-
-
-        /* Support decimal progress: 0.5 = 50% */
+        value = Number(value);
 
         if (
-            progress > 0 &&
-            progress <= 1
+            value > 0 &&
+            value <= 1
         ) {
-            progress *= 100;
+            value *= 100;
         }
 
-
-        if (!Number.isFinite(progress)) {
+        if (!Number.isFinite(value)) {
             return 0;
         }
 
@@ -327,112 +361,110 @@ VelType V1 Dashboard JavaScript
             0,
             Math.min(
                 100,
-                Math.round(progress)
+                Math.round(value)
             )
         );
     }
 
 
     /* =========================================================
-       SORT LESSONS
+       OVERALL LESSON PROGRESS
        ========================================================= */
 
-    function getSortedLessons() {
-        return getLessons()
-            .map(lesson => ({
-                lesson,
-                number: getLessonNumber(lesson),
-                progress: getLessonProgress(lesson)
-            }))
-            .filter(item =>
-                item.number !== null
-            )
-            .sort((a, b) =>
-                a.number - b.number
-            );
-    }
+    function getAcademyProgress() {
 
+        const progress =
+            getLessonProgress();
 
-    /* =========================================================
-       TOTAL LESSONS
-       =========================================================
+        let totalProgress = 0;
 
-       VelType currently has 24 learning lessons.
-    */
+        for (
+            let i = 1;
+            i <= TOTAL_LESSONS;
+            i++
+        ) {
+            totalProgress +=
+                getLessonPercent(
+                    i,
+                    progress
+                );
+        }
 
-    function getTotalLessons() {
-        return 24;
-    }
-
-
-    /* =========================================================
-       COMPLETED LESSONS
-       ========================================================= */
-
-    function getCompletedLessons() {
-        return getSortedLessons()
-            .filter(item =>
-                item.progress >= 100
-            ).length;
+        return Math.round(
+            totalProgress /
+            TOTAL_LESSONS
+        );
     }
 
 
     /* =========================================================
        CURRENT LESSON
-       =========================================================
-
-       If Lesson 01 is complete:
-           show Lesson 02
-
-       If Lesson 01 is 50%:
-           show Lesson 01
-
-       If Lesson 01 and 02 are complete
-       but 03 is 40%:
-           show Lesson 03
-    */
+       ========================================================= */
 
     function getCurrentLesson() {
-        const lessons = getSortedLessons();
 
-        if (!lessons.length) {
-            return {
-                number: 1,
-                progress: 0
-            };
+        const progress =
+            getLessonProgress();
+
+        for (
+            let i = 1;
+            i <= TOTAL_LESSONS;
+            i++
+        ) {
+
+            const percent =
+                getLessonPercent(
+                    i,
+                    progress
+                );
+
+            if (percent < 100) {
+                return {
+                    number: i,
+                    progress: percent
+                };
+            }
         }
-
-
-        const firstIncomplete =
-            lessons.find(
-                item => item.progress < 100
-            );
-
-        if (firstIncomplete) {
-            return firstIncomplete;
-        }
-
-
-        /* All saved lessons are complete */
-
-        const last =
-            lessons[lessons.length - 1];
 
         return {
-            number: last.number + 1,
-            progress: 0
+            number: TOTAL_LESSONS,
+            progress: 100
         };
     }
 
 
     /* =========================================================
-       OVERVIEW
+       ACADEMY LEVEL
+       ========================================================= */
+
+    function getAcademyLevel(
+        percent
+    ) {
+
+        if (percent >= 90) {
+            return "Advanced";
+        }
+
+        if (percent >= 60) {
+            return "Intermediate";
+        }
+
+        if (percent >= 30) {
+            return "Developing";
+        }
+
+        return "Foundation";
+    }
+
+
+    /* =========================================================
+       OVERVIEW STATS
        ========================================================= */
 
     function updateOverview() {
-        const stats = getTestStats();
-        const completed =
-            getCompletedLessons();
+
+        const stats =
+            getTestStats();
 
         animateNumber(
             "#bestWpm",
@@ -450,53 +482,36 @@ VelType V1 Dashboard JavaScript
             stats.count
         );
 
+        /*
+         * This requires dashboard.html
+         * to have:
+         *
+         * id="averageWpm"
+         */
+
         animateNumber(
-            "#lessonsCompleted",
-            completed
+            "#averageWpm",
+            stats.averageWpm
         );
     }
 
 
     /* =========================================================
-       ACADEMY PROGRESS
+       CONTINUE LEARNING
        ========================================================= */
 
     function updateAcademy() {
+
         const completed =
             getCompletedLessons();
 
-        const total =
-            getTotalLessons();
+        const percent =
+            getAcademyProgress();
 
-        /*
-         * A lesson that is 50% complete
-         * also contributes to overall academy
-         * progress.
-         */
+        const current =
+            getCurrentLesson();
 
-        const lessons =
-            getSortedLessons();
-
-        const partialProgress =
-            lessons.reduce(
-                (totalProgress, item) =>
-                    totalProgress + item.progress,
-                0
-            );
-
-        const percent = total
-            ? Math.min(
-                100,
-                Math.round(
-                    (partialProgress /
-                        (total * 100)) *
-                    100
-                )
-            )
-            : 0;
-
-
-        /* Ring percentage */
+        /* Overall percentage */
 
         setText(
             "#academyPercent",
@@ -504,7 +519,7 @@ VelType V1 Dashboard JavaScript
         );
 
 
-        /* Current level */
+        /* Academy level */
 
         setText(
             "#academyLevel",
@@ -512,17 +527,25 @@ VelType V1 Dashboard JavaScript
         );
 
 
-        /* Current lesson */
+        /* Continue learning text */
 
-        const current =
-            getCurrentLesson();
-
-
-        if (current.progress > 0) {
+        if (
+            current.progress > 0 &&
+            current.progress < 100
+        ) {
 
             setText(
                 "#academyProgressText",
                 `Lesson ${String(current.number).padStart(2, "0")} is ${current.progress}% complete.`
+            );
+
+        } else if (
+            completed >= TOTAL_LESSONS
+        ) {
+
+            setText(
+                "#academyProgressText",
+                "All 24 lessons completed. Excellent work."
             );
 
         } else {
@@ -560,34 +583,73 @@ VelType V1 Dashboard JavaScript
 
             });
         }
-    }
 
 
-    /* =========================================================
-       ACADEMY LEVEL
-       ========================================================= */
+        /*
+         * Optional lesson count
+         * if the HTML contains it.
+         */
 
-    function getAcademyLevel(percent) {
-
-        if (percent >= 90) {
-            return "Advanced";
-        }
-
-        if (percent >= 60) {
-            return "Intermediate";
-        }
-
-        if (percent >= 30) {
-            return "Developing";
-        }
-
-        return "Foundation";
+        setText(
+            "#dashboardLessonsCompleted",
+            completed
+        );
     }
 
 
     /* =========================================================
        TEST HISTORY
        ========================================================= */
+
+    function getTestTimestamp(test) {
+
+        if (!test) {
+            return 0;
+        }
+
+        if (
+            typeof test.timestamp ===
+            "number"
+        ) {
+            return test.timestamp;
+        }
+
+        if (test.date) {
+
+            const timestamp =
+                new Date(
+                    test.date
+                ).getTime();
+
+            return Number.isNaN(timestamp)
+                ? 0
+                : timestamp;
+        }
+
+        return 0;
+    }
+
+
+    function formatDate(test) {
+
+        const timestamp =
+            getTestTimestamp(test);
+
+        if (!timestamp) {
+            return "Recently";
+        }
+
+        return new Intl.DateTimeFormat(
+            "en",
+            {
+                day: "numeric",
+                month: "short"
+            }
+        ).format(
+            new Date(timestamp)
+        );
+    }
+
 
     function updateTestHistory() {
 
@@ -598,28 +660,20 @@ VelType V1 Dashboard JavaScript
             return;
         }
 
-
-        const data =
+        const tests =
             getTests();
 
-
-        /* No history */
-
-        if (!data.length) {
+        if (!tests.length) {
 
             container.innerHTML = `
                 <div class="empty-state">
+                    <div class="empty-mark">⌨</div>
 
-                    <div class="empty-mark">
-                        ⌨
-                    </div>
-
-                    <h3>
-                        No tests yet
-                    </h3>
+                    <h3>No tests yet</h3>
 
                     <p>
-                        Complete your first typing test and your results will appear here.
+                        Complete your first typing test
+                        and your results will appear here.
                     </p>
 
                     <a
@@ -628,7 +682,6 @@ VelType V1 Dashboard JavaScript
                     >
                         Take a Test <span>→</span>
                     </a>
-
                 </div>
             `;
 
@@ -636,20 +689,17 @@ VelType V1 Dashboard JavaScript
         }
 
 
-        /* Latest tests first */
-
         const recent =
-            [...data]
+            [...tests]
                 .sort(
                     (a, b) =>
-                        getTimestamp(b) -
-                        getTimestamp(a)
+                        getTestTimestamp(b) -
+                        getTestTimestamp(a)
                 )
                 .slice(0, 6);
 
 
         container.innerHTML = `
-
             <div class="history-list">
 
                 ${recent.map(test => {
@@ -668,49 +718,38 @@ VelType V1 Dashboard JavaScript
                         Number(test.duration) ||
                         30;
 
-                    const date =
-                        test.date ||
-                        test.timestamp ||
-                        test.createdAt;
-
-
                     return `
-
                         <div class="history-item">
 
                             <div class="history-main">
 
                                 <strong>
-                                    ${escapeHTML(wpm)} WPM
+                                    ${wpm} WPM
                                 </strong>
 
                                 <span>
-                                    ${escapeHTML(accuracy)}% accuracy
+                                    ${accuracy}% accuracy
                                 </span>
 
                             </div>
 
-
                             <div class="history-details">
 
                                 <span>
-                                    ${escapeHTML(errors)} errors
+                                    ${errors} errors
                                 </span>
 
                                 <span>
-                                    ${escapeHTML(mode)}s
+                                    ${mode}s
                                 </span>
 
-                                <time
-                                    datetime="${escapeHTML(date || "")}"
-                                >
-                                    ${formatDate(date)}
+                                <time>
+                                    ${formatDate(test)}
                                 </time>
 
                             </div>
 
                         </div>
-
                     `;
 
                 }).join("")}
@@ -754,9 +793,8 @@ VelType V1 Dashboard JavaScript
 
                 openResetModal(
                     "Reset exercises?",
-                    "Your saved exercise progress will be removed. Your test history will remain."
+                    "Your saved exercise progress will be removed. Your typing test history will remain."
                 );
-
             }
         );
 
@@ -770,9 +808,8 @@ VelType V1 Dashboard JavaScript
 
                 openResetModal(
                     "Reset your progress?",
-                    "This will remove your saved lessons, tests and typing statistics. This action cannot be undone."
+                    "This will remove your saved lessons, tests and typing statistics."
                 );
-
             }
         );
 
@@ -795,7 +832,6 @@ VelType V1 Dashboard JavaScript
                     localStorage.removeItem(
                         STORAGE_KEYS.exercises
                     );
-
                 }
 
 
@@ -819,14 +855,12 @@ VelType V1 Dashboard JavaScript
                     localStorage.removeItem(
                         STORAGE_KEYS.exercises
                     );
-
                 }
 
 
                 closeResetModal();
 
                 render();
-
             }
         );
 
@@ -849,11 +883,8 @@ VelType V1 Dashboard JavaScript
                     event.key ===
                     "Escape"
                 ) {
-
                     closeResetModal();
-
                 }
-
             }
         );
     }
@@ -895,7 +926,6 @@ VelType V1 Dashboard JavaScript
             modal.classList.add(
                 "is-visible"
             );
-
         });
     }
 
@@ -906,8 +936,7 @@ VelType V1 Dashboard JavaScript
             $("#resetModal");
 
         if (!modal) {
-            return;
-        }
+            }
 
         modal.classList.remove(
             "is-visible"
@@ -927,7 +956,7 @@ VelType V1 Dashboard JavaScript
 
 
     /* =========================================================
-       DASHBOARD ANIMATION
+       REVEAL ANIMATION
        ========================================================= */
 
     function revealDashboard() {
@@ -937,7 +966,6 @@ VelType V1 Dashboard JavaScript
                 ".dashboard-header, .stats-grid, .dashboard-card"
             );
 
-
         elements.forEach(
             (element, index) => {
 
@@ -946,7 +974,6 @@ VelType V1 Dashboard JavaScript
 
                 element.style.transform =
                     "translateY(14px)";
-
 
                 setTimeout(() => {
 
@@ -960,7 +987,6 @@ VelType V1 Dashboard JavaScript
                         "translateY(0)";
 
                 }, 70 + index * 70);
-
             }
         );
     }
@@ -974,9 +1000,9 @@ VelType V1 Dashboard JavaScript
 
         updateOverview();
 
-        updateTestHistory();
-
         updateAcademy();
+
+        updateTestHistory();
     }
 
 
@@ -993,8 +1019,32 @@ VelType V1 Dashboard JavaScript
             render();
 
             revealDashboard();
-
         }
     );
 
-})()
+
+    /* =========================================================
+       UPDATE WHEN STORAGE CHANGES
+       ========================================================= */
+
+    window.addEventListener(
+        "storage",
+        event => {
+
+            if (
+                event.key ===
+                STORAGE_KEYS.tests ||
+                event.key ===
+                STORAGE_KEYS.lessons ||
+                event.key ===
+                STORAGE_KEYS.progress
+            ) {
+
+                render();
+            }
+        }
+    );
+
+
+})();
+    
