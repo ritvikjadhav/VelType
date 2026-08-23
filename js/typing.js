@@ -66,16 +66,12 @@ class TypingTest {
 
     // Generate random passage
     generatePassage() {
-        const index = Math.floor(
-            Math.random() * this.passages.length
-        );
-
+        const index = Math.floor(Math.random() * this.passages.length);
         this.text = this.passages[index];
         this.passage.innerHTML = "";
 
         [...this.text].forEach((character, index) => {
             const span = document.createElement("span");
-
             span.textContent = character;
             span.dataset.index = index;
 
@@ -89,12 +85,10 @@ class TypingTest {
 
     // Bind test events
     bindEvents() {
-        // Typing input
         this.input.addEventListener("input", () => {
             this.handleInput();
         });
 
-        // Prevent navigation keys
         this.input.addEventListener("keydown", event => {
             const blockedKeys = [
                 "Tab",
@@ -109,35 +103,28 @@ class TypingTest {
             }
         });
 
-        // Focus input from passage
         this.passage.addEventListener("click", () => {
             this.focusInput();
         });
 
-        // Focus input from typing surface
-        document
-            .querySelector("#typingSurface")
-            ?.addEventListener("click", event => {
-                if (
-                    event.target.closest(".typing-box-header") ||
-                    event.target.closest(".typing-hint") ||
-                    event.target === this.passage
-                ) {
-                    this.focusInput();
-                }
-            });
+        document.querySelector("#typingSurface")?.addEventListener("click", event => {
+            if (
+                event.target.closest(".typing-box-header") ||
+                event.target.closest(".typing-hint") ||
+                event.target === this.passage
+            ) {
+                this.focusInput();
+            }
+        });
 
-        // Restart button
         this.restartButton?.addEventListener("click", () => {
             this.restart();
         });
 
-        // Result restart button
         this.resultRestart?.addEventListener("click", () => {
             this.restart();
         });
 
-        // Test mode buttons
         this.modeButtons.forEach(button => {
             button.addEventListener("click", () => {
                 this.modeButtons.forEach(item => {
@@ -145,7 +132,6 @@ class TypingTest {
                 });
 
                 button.classList.add("active");
-
                 this.timeLimit = Number(button.dataset.time) || 30;
                 this.restart();
             });
@@ -160,13 +146,11 @@ class TypingTest {
 
         let value = this.input.value;
 
-        // Limit input to passage length
         if (value.length > this.text.length) {
             value = value.slice(0, this.text.length);
             this.input.value = value;
         }
 
-        // Start timer on first character
         if (!this.started && value.length > 0) {
             this.start();
         }
@@ -177,13 +161,8 @@ class TypingTest {
 
         const characters = this.passage.querySelectorAll("span");
 
-        // Update character states
         characters.forEach((character, index) => {
-            character.classList.remove(
-                "correct",
-                "wrong",
-                "current"
-            );
+            character.classList.remove("correct", "wrong", "current");
 
             if (index < value.length) {
                 if (value[index] === this.text[index]) {
@@ -200,10 +179,8 @@ class TypingTest {
             }
         });
 
-        // Update live statistics
         this.updateStats();
 
-        // Finish when passage is completed
         if (value.length === this.text.length) {
             this.finish();
         }
@@ -221,10 +198,8 @@ class TypingTest {
 
         clearInterval(this.timer);
 
-        // Update timer every 100 milliseconds
         this.timer = setInterval(() => {
-            const elapsed =
-                (Date.now() - this.startTime) / 1000;
+            const elapsed = (Date.now() - this.startTime) / 1000;
 
             this.timeLeft = Math.max(
                 this.timeLimit - Math.floor(elapsed),
@@ -234,7 +209,6 @@ class TypingTest {
             this.updateTimer();
             this.updateStats();
 
-            // Finish when time expires
             if (elapsed >= this.timeLimit) {
                 this.finish();
             }
@@ -246,12 +220,11 @@ class TypingTest {
     // Update timer display
     updateTimer() {
         if (this.timerDisplay) {
-            this.timerDisplay.textContent = `${this.timeLeft}s`;
+            this.timerDisplay.textContent = this.timeLeft;
         }
 
         if (this.testModeLabel) {
-            this.testModeLabel.textContent =
-                `${this.timeLimit} SEC`;
+            this.testModeLabel.textContent = `${this.timeLimit} SEC`;
         }
     }
 
@@ -276,29 +249,22 @@ class TypingTest {
         const elapsed = this.getElapsedTime();
         const minutes = Math.max(elapsed / 60, 1 / 60);
 
-        const wpm = Math.round(
-            (this.correct / 5) / minutes
-        );
+        const wpm = Math.round((this.correct / 5) / minutes);
 
         const accuracy = this.typed > 0
-            ? Math.round(
-                (this.correct / this.typed) * 100
-            )
+            ? Math.round((this.correct / this.typed) * 100)
             : 100;
 
         if (this.wpmDisplay) {
-            this.wpmDisplay.textContent =
-                Math.max(wpm, 0);
+            this.wpmDisplay.textContent = Math.max(wpm, 0);
         }
 
         if (this.accuracyDisplay) {
-            this.accuracyDisplay.textContent =
-                `${Math.min(100, accuracy)}%`;
+            this.accuracyDisplay.textContent = `${Math.min(100, accuracy)}%`;
         }
 
         if (this.errorsDisplay) {
-            this.errorsDisplay.textContent =
-                this.errors;
+            this.errorsDisplay.textContent = this.errors;
         }
     }
 
@@ -325,7 +291,6 @@ class TypingTest {
         clearInterval(this.timer);
         this.timer = null;
 
-        // Set timer to zero when time expires
         if (
             this.getElapsedTime() >= this.timeLimit &&
             this.timeLeft <= 0
@@ -334,13 +299,8 @@ class TypingTest {
             this.updateTimer();
         }
 
-        // Update final statistics
         this.updateStats();
-
-        // Save result
         this.saveResult();
-
-        // Show result
         this.showResult();
 
         this.input.blur();
@@ -355,38 +315,27 @@ class TypingTest {
         const elapsed = this.getElapsedTime();
         const minutes = Math.max(elapsed / 60, 1 / 60);
 
-        const wpm = Math.round(
-            (this.correct / 5) / minutes
-        );
-
-        const rawWpm = Math.round(
-            (this.typed / 5) / minutes
-        );
+        const wpm = Math.round((this.correct / 5) / minutes);
+        const rawWpm = Math.round((this.typed / 5) / minutes);
 
         const accuracy = this.typed > 0
-            ? Math.round(
-                (this.correct / this.typed) * 100
-            )
+            ? Math.round((this.correct / this.typed) * 100)
             : 100;
 
         if (this.resultWpm) {
-            this.resultWpm.textContent =
-                Math.max(wpm, 0);
+            this.resultWpm.textContent = Math.max(wpm, 0);
         }
 
         if (this.resultAccuracy) {
-            this.resultAccuracy.textContent =
-                `${Math.min(100, accuracy)}%`;
+            this.resultAccuracy.textContent = `${Math.min(100, accuracy)}%`;
         }
 
         if (this.resultErrors) {
-            this.resultErrors.textContent =
-                this.errors;
+            this.resultErrors.textContent = this.errors;
         }
 
         if (this.resultRawWpm) {
-            this.resultRawWpm.textContent =
-                Math.max(rawWpm, 0);
+            this.resultRawWpm.textContent = Math.max(rawWpm, 0);
         }
 
         this.result.hidden = false;
@@ -405,55 +354,28 @@ class TypingTest {
 
     // Save test result to localStorage
     saveResult() {
-    const elapsed = Math.max(1, Math.round(this.getElapsedTime()));
-    const minutes = elapsed / 60;
-
-    const wpm = Math.round((this.correct / 5) / minutes);
-    const rawWpm = Math.round((this.typed / 5) / minutes);
-    const accuracy = this.typed > 0
-        ? Math.round((this.correct / this.typed) * 100)
-        : 100;
-
-    const result = {
-        wpm: Math.max(wpm, 0),
-        rawWpm: Math.max(rawWpm, 0),
-        accuracy: Math.min(100, accuracy),
-        errors: this.errors,
-        characters: this.typed,
-        correctCharacters: this.correct,
-        duration: elapsed,
-        mode: this.timeLimit,
-        date: new Date().toISOString(),
-        timestamp: Date.now()
-    };
-
-    try {
-        const history = JSON.parse(
-            localStorage.getItem("veltypeTests") || "[]"
+        const elapsed = Math.max(
+            1,
+            Math.round(this.getElapsedTime())
         );
 
-        const tests = Array.isArray(history) ? history : [];
+        const minutes = elapsed / 60;
 
-        tests.unshift(result);
-
-        localStorage.setItem(
-            "veltypeTests",
-            JSON.stringify(tests.slice(0, 50))
+        const wpm = Math.round(
+            (this.correct / 5) / minutes
         );
 
-        console.log("VelType test saved:", result);
-        console.log(
-            "VelType test history:",
-            JSON.parse(localStorage.getItem("veltypeTests"))
+        const rawWpm = Math.round(
+            (this.typed / 5) / minutes
         );
 
-    } catch (error) {
-        console.error("VelType could not save test:", error);
-    }
-        }
+        const accuracy = this.typed > 0
+            ? Math.round(
+                (this.correct / this.typed) * 100
+            )
+            : 100;
 
-        // Add current test
-        history.unshift({
+        const result = {
             wpm: Math.max(wpm, 0),
             rawWpm: Math.max(rawWpm, 0),
             accuracy: Math.min(100, accuracy),
@@ -464,13 +386,22 @@ class TypingTest {
             mode: this.timeLimit,
             date: new Date().toISOString(),
             timestamp: Date.now()
-        });
+        };
 
-        // Keep latest 50 tests
-        localStorage.setItem(
-            "veltypeTests",
-            JSON.stringify(history.slice(0, 50))
-        );
+        try {
+            const stored = localStorage.getItem("veltypeTests");
+            const history = stored ? JSON.parse(stored) : [];
+            const tests = Array.isArray(history) ? history : [];
+
+            tests.unshift(result);
+
+            localStorage.setItem(
+                "veltypeTests",
+                JSON.stringify(tests.slice(0, 50))
+            );
+        } catch (error) {
+            console.error("VelType could not save test:", error);
+        }
     }
 
     // Reset current test
@@ -502,9 +433,7 @@ class TypingTest {
             this.errorsDisplay.textContent = "0";
         }
 
-        // Reset passage character states
-        const characters =
-            this.passage.querySelectorAll("span");
+        const characters = this.passage.querySelectorAll("span");
 
         characters.forEach((character, index) => {
             character.classList.remove(
@@ -544,4 +473,4 @@ class TypingTest {
             preventScroll: true
         });
     }
-    }
+            }
