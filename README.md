@@ -3,7 +3,6 @@
 > **Flow Into Speed.**  
 > A modern typing practice and learning platform built to help users improve speed, accuracy, consistency, and touch-typing technique.
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-VelType-111111?style=for-the-badge)](https://your-username.github.io/veltype/)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=111111)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
@@ -149,15 +148,6 @@ Recommended showcase order:
 ### Homepage
 
 Place the main homepage screenshot here:
-
-```text
-assets/
-└── screenshots/
-    ├── homepage.png
-    ├── typing-test.png
-    ├── learning.png
-    └── dashboard.png
-```
 
 Then add:
 
