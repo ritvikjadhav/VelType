@@ -162,25 +162,25 @@ assets/
 Then add:
 
 ```md
-![VelType Homepage](assets/screenshots/homepage.png)
+![VelType Homepage](image/homepage.png)
 ```
 
 ### Typing Test
 
 ```md
-![VelType Typing Test](assets/screenshots/typing-test.png)
+![VelType Typing Test](image/typing-test.png)
 ```
 
 ### Learning Academy
 
 ```md
-![VelType Learning Academy](assets/screenshots/learning.png)
+![VelType Learning Academy](image/learning.png)
 ```
 
 ### Progress Dashboard
 
 ```md
-![VelType Progress Dashboard](assets/screenshots/dashboard.png)
+![VelType Progress Dashboard](image/dashboard.png)
 ```
 
 > **Tip:** The homepage image should be the first major screenshot because it gives recruiters an immediate understanding of the project's visual quality.
