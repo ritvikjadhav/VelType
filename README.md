@@ -169,9 +169,8 @@ Then add:
 
 ### Progress Dashboard
 
-```md
-![VelType Progress Dashboard](image/dashboard.png)
-```
+image/dashboard.png
+
 
 > **Tip:** The homepage image should be the first major screenshot because it gives recruiters an immediate understanding of the project's visual quality.
 
