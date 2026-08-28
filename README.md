@@ -151,21 +151,21 @@ Place the main homepage screenshot here:
 
 Then add:
 
-```md
+
 ![VelType Homepage](./image/homepage.png)
-```
+
 
 ### Typing Test
 
-```md
+
 ![VelType Typing Test](./image/typing-test.png)
-```
+
 
 ### Learning Academy
 
-```md
+
 ![VelType Learning Academy](./image/learning.png)
-```
+
 
 ### Progress Dashboard
 
