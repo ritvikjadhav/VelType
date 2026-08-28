@@ -152,24 +152,25 @@ Place the main homepage screenshot here:
 Then add:
 
 ```md
-![VelType Homepage](image/homepage.png)
+![VelType Homepage](./image/homepage.png)
 ```
 
 ### Typing Test
 
 ```md
-![VelType Typing Test](image/typing-test.png)
+![VelType Typing Test](./image/typing-test.png)
 ```
 
 ### Learning Academy
 
 ```md
-![VelType Learning Academy](image/learning.png)
+![VelType Learning Academy](./image/learning.png)
 ```
 
 ### Progress Dashboard
 
-image/dashboard.png
+
+![VelType Learning Academy](./image/dashboard.png)
 
 
 > **Tip:** The homepage image should be the first major screenshot because it gives recruiters an immediate understanding of the project's visual quality.
