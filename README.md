@@ -172,9 +172,6 @@ Then add:
 
 ![VelType Learning Academy](./image/dashboard.png)
 
-
-> **Tip:** The homepage image should be the first major screenshot because it gives recruiters an immediate understanding of the project's visual quality.
-
 ---
 
 ## 🧠 How It Works
@@ -368,38 +365,6 @@ Typing Test
 Learn
 Progress
 ```
-
----
-
-## 🌐 Deployment
-
-VelType is suitable for static hosting because it does not require a server-side runtime.
-
-It can be deployed using:
-
-- GitHub Pages
-- Vercel
-- Netlify
-- Any static web host
-
-For GitHub Pages:
-
-```text
-Repository
-   ↓
-Settings
-   ↓
-Pages
-   ↓
-Deploy from branch
-   ↓
-Select main branch
-   ↓
-/root
-   ↓
-Save
-```
-
 ---
 
 ## 🔐 Privacy
@@ -509,24 +474,6 @@ Repeat
 ```
 
 The goal is not simply to display a typing test, but to create a small, coherent learning product.
-
----
-
-## 💼 Why This Project Matters
-
-VelType was built to demonstrate the ability to take a product from **idea → interface → interaction → data → deployment**.
-
-Instead of creating only a visually attractive homepage, the project includes a connected experience where:
-
-- The typing test generates real performance data.
-- The data persists between sessions.
-- The dashboard reads and calculates that data.
-- The learning academy tracks lesson completion.
-- Lessons unlock progressively.
-- The dashboard reflects learning progress.
-- The entire experience works without requiring a backend.
-
-This makes VelType a practical demonstration of frontend engineering, UI/UX implementation, JavaScript logic, browser APIs, and product thinking.
 
 ---
 
