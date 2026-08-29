@@ -267,42 +267,7 @@ The dashboard reads the stored data and derives:
 - Current level
 - Recent test history
 
-This keeps the UI and stored data separated from the presentation layer.
-
----
-
-## 📁 Project Structure
-
-```text
-VelType/
-│
-├── index.html
-├── test.html
-├── learn.html
-├── lesson.html
-├── dashboard.html
-│
-├── css/
-│   ├── style.css
-│   ├── test.css
-│   ├── learn.css
-│   ├── lesson.css
-│   └── dashboard.css
-│
-├── js/
-│   ├── main.js
-│   ├── typing.js
-│   ├── learn.js
-│   ├── lesson.js
-│   ├── lessondata.js
-│   └── dashboard.js
-│
-├── assets/
-│   ├── images/
-│   └── screenshots/
-│
-└── README.md
-```
+This keeps the UI and stored data separated from the presentation layers.
 
 ---
 
