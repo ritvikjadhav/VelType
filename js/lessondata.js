@@ -100,69 +100,96 @@ const lessons = [
     },
 
     {
-        id: 5,
-        level: "Core Typing",
-        difficulty: "Beginner",
-        title: "Left Hand Reach",
-        description: "Strengthen left-hand control across the home, top and bottom rows.",
-        duration: 14,
-        guideImage: "image/left-hand-reach.png",
-        exercises: [
-            "aqaz swsx dedc frfv aqaz swsx dedc frfv",
-            "qwer asdf zxcv qwer asdf zxcv",
-            "we are ready to learn left hand movement",
-            "Practice every left hand movement slowly before increasing your speed."
-        ]
-    },
+    id: 5,
+    level: "Core Typing",
+    difficulty: "Beginner",
+    title: "Left Hand Reach",
+    description: "Strengthen left-hand control across the home, top and bottom rows.",
+    duration: 14,
+    guideImage: "image/left-hand-reach.png",
+    guideList: [
+        "Left fingers rest on A S D F.",
+        "Keep your fingers naturally curved.",
+        "Reach upward and downward without lifting your hand too far.",
+        "Return to the home position after each movement.",
+        "Focus on accuracy and comfortable movement before increasing speed."
+    ],
+    exercises: [
+        "aqaz swsx dedc frfv aqaz swsx dedc frfv",
+        "qwer asdf zxcv qwer asdf zxcv",
+        "we are ready to learn left hand movement",
+        "Practice every left hand movement slowly before increasing your speed."
+    ]
+},
 
-    {
-        id: 6,
-        level: "Core Typing",
-        difficulty: "Beginner",
-        title: "Right Hand Reach",
-        description: "Build controlled movement across the right side of the keyboard.",
-        duration: 14,
-        guideImage: "image/right-hand-reach.png",
-        exercises: [
-            "jujm kik, lol. jujm kik, lol. yuiop",
-            "yuiop hjkl; nm,. yuiop hjkl; nm,.",
-            "you will learn to keep your right hand steady",
-            "Practice controlled right hand movement and return to the home position."
-        ]
-    },
+{
+    id: 6,
+    level: "Core Typing",
+    difficulty: "Beginner",
+    title: "Right Hand Reach",
+    description: "Build controlled movement across the right side of the keyboard.",
+    duration: 14,
+    guideImage: "image/right-hand-reach.png",
+    guideList: [
+        "Right fingers rest on J K L ;.",
+        "Keep your fingers naturally curved.",
+        "Reach across the right side of the keyboard without moving your whole hand.",
+        "Return to the home position after each movement.",
+        "Focus on accuracy and controlled movement before increasing speed."
+    ],
+    exercises: [
+        "jujm kik, lol. jujm kik, lol. yuiop",
+        "yuiop hjkl; nm,. yuiop hjkl; nm,.",
+        "you will learn to keep your right hand steady",
+        "Practice controlled right hand movement and return to the home position."
+    ]
+},
 
-    {
-        id: 7,
-        level: "Core Typing",
-        difficulty: "Beginner",
-        title: "Top Row",
-        description: "Reach upward while keeping your hands connected to the home position.",
-        duration: 15,
-        guideImage: "image/top-row.png",
-        exercises: [
-            "qwer tyui qwer tyui opqw erui",
-            "write every word clearly while keeping your fingers relaxed",
-            "type quiet words with your eyes on the screen",
-            "Reach toward the top row without losing your home position or rhythm."
-        ]
-    },
+{
+    id: 7,
+    level: "Core Typing",
+    difficulty: "Beginner",
+    title: "Top Row",
+    description: "Reach upward while keeping your hands connected to the home position.",
+    duration: 15,
+    guideImage: "image/top-row.png",
+    guideList: [
+        "Keep both hands anchored around the home position.",
+        "Reach upward with the correct finger for each key.",
+        "Return each finger to its home position after pressing a key.",
+        "Keep your fingers naturally curved and your hands relaxed.",
+        "Look at the screen and focus on accuracy before speed."
+    ],
+    exercises: [
+        "qwer tyui qwer tyui opqw erui",
+        "write every word clearly while keeping your fingers relaxed",
+        "type quiet words with your eyes on the screen",
+        "Reach toward the top row without losing your home position or rhythm."
+    ]
+},
 
-    {
-        id: 8,
-        level: "Core Typing",
-        difficulty: "Beginner",
-        title: "Bottom Row",
-        description: "Develop comfortable movement on the bottom row without losing control.",
-        duration: 15,
-        guideImage: "image/bottom-row.png",
-        exercises: [
-            "zxcv bnm zxcv bnm zxcv bnm",
-            "zinc move next zoom across the bottom row",
-            "mix box van and move your fingers carefully",
-            "Practice bottom row words while maintaining a steady typing rhythm."
-        ]
-    },
-
+{
+    id: 8,
+    level: "Core Typing",
+    difficulty: "Beginner",
+    title: "Bottom Row",
+    description: "Develop comfortable movement on the bottom row without losing control.",
+    duration: 15,
+    guideImage: "image/bottom-row.png",
+    guideList: [
+        "Keep both hands close to the home position.",
+        "Reach downward with the correct finger for each key.",
+        "Return each finger to its home position after movement.",
+        "Keep your fingers naturally curved and your wrists relaxed.",
+        "Build accuracy and comfortable movement before trying to type quickly."
+    ],
+    exercises: [
+        "zxcv bnm zxcv bnm zxcv bnm",
+        "zinc move next zoom across the bottom row",
+        "mix box van and move your fingers carefully",
+        "Practice bottom row words while maintaining a steady typing rhythm."
+    ]
+},
     {
         id: 9,
         level: "Core Typing",
