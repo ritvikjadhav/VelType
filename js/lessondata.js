@@ -106,7 +106,6 @@ const lessons = [
     title: "Left Hand Reach",
     description: "Strengthen left-hand control across the home, top and bottom rows.",
     duration: 14,
-    guideImage: "image/left-hand-reach.png",
     guideList: [
         "Left fingers rest on A S D F.",
         "Keep your fingers naturally curved.",
@@ -129,7 +128,6 @@ const lessons = [
     title: "Right Hand Reach",
     description: "Build controlled movement across the right side of the keyboard.",
     duration: 14,
-    guideImage: "image/right-hand-reach.png",
     guideList: [
         "Right fingers rest on J K L ;.",
         "Keep your fingers naturally curved.",
@@ -152,7 +150,6 @@ const lessons = [
     title: "Top Row",
     description: "Reach upward while keeping your hands connected to the home position.",
     duration: 15,
-    guideImage: "image/top-row.png",
     guideList: [
         "Keep both hands anchored around the home position.",
         "Reach upward with the correct finger for each key.",
@@ -175,7 +172,6 @@ const lessons = [
     title: "Bottom Row",
     description: "Develop comfortable movement on the bottom row without losing control.",
     duration: 15,
-    guideImage: "image/bottom-row.png",
     guideList: [
         "Keep both hands close to the home position.",
         "Reach downward with the correct finger for each key.",
